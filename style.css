@@ -1,0 +1,69 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+.container {
+    width: 100%;
+    max-width: 650px; /* ปรับตามความกว้างของภาพ */
+    text-align: center;
+}
+
+.input-section {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+}
+
+/* ส่วนสำคัญ: จัดการการวางซ้อนภาพ */
+.letter-wrapper {
+    position: relative; /* กำหนดให้เป็น Container หลัก */
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.original-letter {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.guest-name {
+    /* คุณสมบัติที่ต้องปรับเพื่อให้ "เนียนๆ" */
+    position: absolute;
+    color: #333333; /* สีที่ใกล้เคียงกับคำว่า Dear ในภาพ */
+    font-family: 'Georgia Pro Condensed', 'Georgia', serif; /* ชื่อฟอนต์ที่คุณต้องการ */
+    font-size: 38px; /* ขนาดที่ใกล้เคียงกับคำว่า Dear ในภาพ (ปรับตามความละเอียดภาพ) */
+    font-weight: 400; /* น้ำหนักฟอนต์ (ปรับตามความจำเป็น) */
+    
+    /* ตำแหน่งที่ต้องปรับให้ชื่ออยู่ข้าง Dear (สำคัญมาก) */
+    top: 32.5%; /* ปรับค่าเปอร์เซ็นต์นี้เพื่อเลื่อนขึ้นลง */
+    left: 20.8%; /* ปรับค่าเปอร์เซ็นต์นี้เพื่อเลื่อนซ้ายขวา */
+    
+    /* ซ่อนข้อความเริ่มต้น */
+    opacity: 0;
+    white-space: nowrap; /* ป้องกันไม่ให้ชื่อขึ้นบรรทัดใหม่ */
+}
+
+/* ปรับเมื่อมีชื่อเข้ามา */
+.guest-name.visible {
+    opacity: 1;
+}
+
+/* หากฟอนต์ Georgia Pro Condensed ไม่สามารถโหลดได้, ให้ปรับ font-size/font-weight ของ 'Georgia' แทน */
+/* .guest-name {
+    font-family: 'Georgia', serif;
+    font-size: 36px;
+    font-weight: bold; 
+    ...
+} */
+
+#nameInput, button {
+    padding: 10px;
+    margin: 5px;
+}
