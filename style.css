@@ -1,3 +1,4 @@
+/* ส่วนเดิม: จัดรูปแบบพื้นฐาน */
 body {
     font-family: Arial, sans-serif;
     display: flex;
@@ -9,22 +10,36 @@ body {
 
 .container {
     width: 100%;
-    max-width: 650px; /* ปรับตามความกว้างของภาพ */
+    max-width: 650px; 
     text-align: center;
 }
 
-.input-section {
+/* ********* NEW: Control Panel Style ********* */
+.control-panel {
     margin-bottom: 20px;
-    padding: 10px;
-    border: 1px solid #ccc;
+    padding: 15px;
+    border: 1px solid #ddd;
     background-color: #fff;
+    text-align: left;
 }
+
+.control-panel label, .instruction {
+    display: block;
+    margin-top: 10px;
+}
+
+#sizeSlider {
+    width: 80%;
+}
+/* ************************************ */
 
 /* ส่วนสำคัญ: จัดการการวางซ้อนภาพ */
 .letter-wrapper {
     position: relative; /* กำหนดให้เป็น Container หลัก */
     display: inline-block;
     margin-bottom: 20px;
+    /* เพิ่มขอบเขตสีแดงเพื่อให้เห็นชัดว่าส่วนไหนที่จะถูกแปลงเป็นภาพ */
+    border: 1px solid #ccc; 
 }
 
 .original-letter {
@@ -34,35 +49,34 @@ body {
 }
 
 .guest-name {
-    /* คุณสมบัติที่ต้องปรับเพื่อให้ "เนียนๆ" */
+    /* คุณสมบัติสำหรับการลากและวาง */
     position: absolute;
-    color: #333333; /* สีที่ใกล้เคียงกับคำว่า Dear ในภาพ */
-    font-family: 'Georgia Pro Condensed', 'Georgia', serif; /* ชื่อฟอนต์ที่คุณต้องการ */
-    font-size: 18px; /* ขนาดที่ใกล้เคียงกับคำว่า Dear ในภาพ (ปรับตามความละเอียดภาพ) */
-    font-weight: 150; /* น้ำหนักฟอนต์ (ปรับตามความจำเป็น) */
+    cursor: move; /* เปลี่ยนเคอร์เซอร์เป็นสัญลักษณ์ลาก */
+    user-select: none; /* ป้องกันการเลือกข้อความขณะลาก */
+    white-space: nowrap; 
     
-    /* ตำแหน่งที่ต้องปรับให้ชื่ออยู่ข้าง Dear (สำคัญมาก) */
-    top: 80%; /* ปรับค่าเปอร์เซ็นต์นี้เพื่อเลื่อนขึ้นลง */
-    left: 75%; /* ปรับค่าเปอร์เซ็นต์นี้เพื่อเลื่อนซ้ายขวา */
+    /* สไตล์ฟอนต์ (สามารถแก้ไขที่นี่ได้เลย) */
+    font-family: 'Georgia Pro Condensed', 'Georgia', serif; 
+    font-weight: 400; 
     
-    /* ซ่อนข้อความเริ่มต้น */
+    /* ซ่อนข้อความเริ่มต้นและแสดงเมื่อมี input */
     opacity: 0;
-    white-space: nowrap; /* ป้องกันไม่ให้ชื่อขึ้นบรรทัดใหม่ */
+    transition: opacity 0.3s; /* ทำให้การแสดงผลดูนุ่มนวลขึ้น */
+    padding: 2px; /* ช่วยให้คลิกง่ายขึ้น */
 }
 
-/* ปรับเมื่อมีชื่อเข้ามา */
 .guest-name.visible {
     opacity: 1;
 }
 
-/* หากฟอนต์ Georgia Pro Condensed ไม่สามารถโหลดได้, ให้ปรับ font-size/font-weight ของ 'Georgia' แทน */
-/* .guest-name {
-    font-family: 'Georgia', serif;
-    font-size: 36px;
-    font-weight: bold; 
-    ...
-} */
-
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+}
 #nameInput, button {
     padding: 10px;
     margin: 5px;
