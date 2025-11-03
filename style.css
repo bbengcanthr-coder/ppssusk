@@ -14,31 +14,34 @@ body {
     text-align: center;
 }
 
-/* ********* NEW: Control Panel Style ********* */
+/* ********* Control Panel Style ********* */
 .control-panel {
     margin-bottom: 20px;
     padding: 15px;
     border: 1px solid #ddd;
     background-color: #fff;
     text-align: left;
+    width: 100%;
+    max-width: 650px;
 }
 
-.control-panel label, .instruction {
+.control-panel label {
     display: block;
     margin-top: 10px;
+    font-weight: bold;
 }
 
-#sizeSlider {
+.control-panel input[type="range"] {
     width: 80%;
+    margin-right: 10px;
 }
 /* ************************************ */
 
 /* ส่วนสำคัญ: จัดการการวางซ้อนภาพ */
 .letter-wrapper {
-    position: relative; /* กำหนดให้เป็น Container หลัก */
+    position: relative; 
     display: inline-block;
     margin-bottom: 20px;
-    /* เพิ่มขอบเขตสีแดงเพื่อให้เห็นชัดว่าส่วนไหนที่จะถูกแปลงเป็นภาพ */
     border: 1px solid #ccc; 
 }
 
@@ -49,20 +52,19 @@ body {
 }
 
 .guest-name {
-    /* คุณสมบัติสำหรับการลากและวาง */
+    /* คุณสมบัติหลักที่ใช้ CSS ในการวางตำแหน่ง */
     position: absolute;
-    cursor: move; /* เปลี่ยนเคอร์เซอร์เป็นสัญลักษณ์ลาก */
-    user-select: none; /* ป้องกันการเลือกข้อความขณะลาก */
+    cursor: default; /* ไม่ต้องลากแล้ว */
+    user-select: none; 
     white-space: nowrap; 
     
-    /* สไตล์ฟอนต์ (สามารถแก้ไขที่นี่ได้เลย) */
+    /* สไตล์ฟอนต์ (ปรับที่นี่) */
     font-family: 'Georgia Pro Condensed', 'Georgia', serif; 
     font-weight: 400; 
     
-    /* ซ่อนข้อความเริ่มต้นและแสดงเมื่อมี input */
+    /* ซ่อนข้อความเริ่มต้น */
     opacity: 0;
-    transition: opacity 0.3s; /* ทำให้การแสดงผลดูนุ่มนวลขึ้น */
-    padding: 2px; /* ช่วยให้คลิกง่ายขึ้น */
+    transition: opacity 0.3s, color 0.1s, font-size 0.1s; 
 }
 
 .guest-name.visible {
@@ -76,8 +78,4 @@ button {
     border: none;
     cursor: pointer;
     margin-top: 10px;
-}
-#nameInput, button {
-    padding: 10px;
-    margin: 5px;
 }
