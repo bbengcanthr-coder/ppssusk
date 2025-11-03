@@ -1,29 +1,44 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สร้างจดหมายเชิญ</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
 <body>
+
     <div class="container">
         <h1>สร้างจดหมายเชิญของคุณ</h1>
         
         <div class="control-panel">
             <h2>ควบคุมข้อความ</h2>
             <label for="nameInput">1. กรอกชื่อ:</label>
-            <input type="text" id="nameInput" placeholder="เช่น SWAN I." oninput="updateName()">
-
-            <label for="colorPicker">2. เลือกสี:</label>
+            <input type="text" id="nameInput" placeholder="เช่น สุวิชาญ จันทร์เพ็ญ" oninput="updateName()">
+            <br>
+            
+            <label for="posXSlider">2. ตำแหน่งแนวนอน (X):</label>
+            <input type="range" id="posXSlider" min="10" max="60" value="20.8" step="0.1" oninput="updateStyle()">
+            <span id="currentX">20.8%</span>
+            
+            <label for="posYSlider">3. ตำแหน่งแนวตั้ง (Y):</label>
+            <input type="range" id="posYSlider" min="25" max="40" value="31.5" step="0.1" oninput="updateStyle()">
+            <span id="currentY">31.5%</span>
+            
+            <label for="sizeSlider">4. ขนาดตัวอักษร:</label>
+            <input type="range" id="sizeSlider" min="25" max="50" value="35" step="1" oninput="updateStyle()">
+            <span id="currentSize">35px</span>
+            
+            <label for="colorPicker">5. เลือกสี:</label>
             <input type="color" id="colorPicker" value="#333333" onchange="updateStyle()">
 
-            <label for="sizeSlider">3. ปรับขนาดตัวอักษร:</label>
-            <input type="range" id="sizeSlider" min="20" max="60" value="35" oninput="updateStyle()">
-            <span id="currentSize">35px</span>
-
-            <p class="instruction">
-                **4. ลากชื่อเพื่อจัดตำแหน่ง:** <br>
-                คลิกเมาส์ค้างที่ชื่อบนจดหมาย แล้วลากไปตำแหน่งที่ต้องการ
-            </p>
         </div>
         <div id="letterContainer" class="letter-wrapper">
-            <img src="ssuks.jpg" alt="จดหมายเชิญ" class="original-letter" id="originalImage">
+            <img src="ssuks.jpg" alt="จดหมายเชิญ" class="original-letter">
             
-            <span id="guestName" class="guest-name" style="left: 20%; top: 30%; font-size: 35px; color: #333333;">
-                [ชื่อของคุณ],
+            <span id="guestName" class="guest-name">
+                [ชื่อ],
             </span>
         </div>
 
