@@ -3,9 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>สร้างจดหมายเชิญ</title>
-    <link rel="stylesheet" href="style.css">
+    <title>สร้างจดหมายเชิญแบบกำหนดเอง</title>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        /* CSS สำหรับการจัดรูปแบบทั้งหมด */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px; 
+            text-align: center;
+        }
+
+        /* Control Panel Style */
+        .control-panel {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            text-align: left;
+            width: 100%;
+            max-width: 650px;
+        }
+
+        .control-panel label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .control-panel input[type="range"] {
+            width: 80%;
+            margin-right: 10px;
+        }
+        
+        /* ส่วนสำคัญ: จัดการการวางซ้อนภาพ */
+        .letter-wrapper {
+            position: relative; 
+            display: inline-block;
+            margin-bottom: 20px;
+            border: 1px solid #ccc; /* ใช้เพื่อเห็นขอบเขตที่ถูกแปลงเป็นภาพ */
+        }
+
+        .original-letter {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .guest-name {
+            /* คุณสมบัติหลักที่ใช้ CSS ในการวางตำแหน่ง */
+            position: absolute;
+            cursor: default; 
+            user-select: none; 
+            white-space: nowrap; 
+            
+            /* สไตล์ฟอนต์เริ่มต้น */
+            font-family: 'Georgia Pro Condensed', 'Georgia', serif; 
+            font-weight: 400; 
+            
+            /* ซ่อนข้อความเริ่มต้น */
+            opacity: 0;
+            transition: opacity 0.3s, color 0.1s, font-size 0.1s; 
+        }
+
+        .guest-name.visible {
+            opacity: 1;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
 
@@ -15,7 +98,7 @@
         <div class="control-panel">
             <h2>ควบคุมข้อความ</h2>
             <label for="nameInput">1. กรอกชื่อ:</label>
-            <input type="text" id="nameInput" placeholder="เช่น สุวิชาญ จันทร์เพ็ญ" oninput="updateName()">
+            <input type="text" id="nameInput" placeholder="เช่น SAWAN I." oninput="updateName()">
             <br>
             
             <label for="posXSlider">2. ตำแหน่งแนวนอน (X):</label>
@@ -34,6 +117,7 @@
             <input type="color" id="colorPicker" value="#333333" onchange="updateStyle()">
 
         </div>
+
         <div id="letterContainer" class="letter-wrapper">
             <img src="ssuks.jpg" alt="จดหมายเชิญ" class="original-letter">
             
@@ -45,6 +129,106 @@
         <button id="downloadBtn" onclick="downloadLetter()" disabled>ดาวน์โหลดจดหมาย (PNG)</button>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // JavaScript สำหรับฟังก์ชันการทำงาน
+        document.addEventListener('DOMContentLoaded', () => {
+            // กำหนดตัวแปรทั้งหมดในนี้เพื่อรับประกันว่า DOM โหลดเสร็จแล้ว
+            const nameInput = document.getElementById('nameInput');
+            const guestNameSpan = document.getElementById('guestName');
+            const letterContainer = document.getElementById('letterContainer');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const colorPicker = document.getElementById('colorPicker');
+            const sizeSlider = document.getElementById('sizeSlider');
+            const posXSlider = document.getElementById('posXSlider');
+            const posYSlider = document.getElementById('posYSlider');
+
+            const currentSizeSpan = document.getElementById('currentSize');
+            const currentXSpan = document.getElementById('currentX');
+            const currentYSpan = document.getElementById('currentY');
+
+            // ฟังก์ชันอัปเดตสไตล์ทั้งหมด (สี, ขนาด, ตำแหน่ง X และ Y)
+            window.updateStyle = function() {
+                // 1. อัปเดตสีและขนาด
+                const newColor = colorPicker.value;
+                const newSize = sizeSlider.value + 'px';
+                
+                guestNameSpan.style.color = newColor;
+                guestNameSpan.style.fontSize = newSize;
+                currentSizeSpan.textContent = newSize;
+
+                // 2. อัปเดตตำแหน่ง X และ Y (ใช้ค่า % จาก Slider)
+                const newPosX = posXSlider.value + '%';
+                const newPosY = posYSlider.value + '%';
+                
+                // *** ส่วนนี้คือส่วนสำคัญในการเลื่อน ***
+                guestNameSpan.style.left = newPosX;
+                guestNameSpan.style.top = newPosY;
+                currentXSpan.textContent = newPosX;
+                currentYSpan.textContent = newPosY;
+            }
+
+            // ฟังก์ชันอัปเดตชื่อเมื่อมีการพิมพ์
+            window.updateName = function() {
+                let name = nameInput.value.trim();
+                
+                if (name) {
+                    guestNameSpan.textContent = name + ','; 
+                    guestNameSpan.classList.add('visible'); 
+                    downloadBtn.disabled = false;
+                    updateStyle(); // บังคับให้แสดงสไตล์ด้วยทันที
+                } else {
+                    guestNameSpan.textContent = '[ชื่อ],';
+                    guestNameSpan.classList.remove('visible');
+                    downloadBtn.disabled = true;
+                }
+            }
+
+            // ฟังก์ชันดาวน์โหลด
+            window.downloadLetter = function() {
+                // ซ่อน Control Panel, ปุ่มดาวน์โหลด, และ h1 ก่อนแปลงเป็นภาพ
+                const containerChildren = document.querySelector('.container').children;
+                const elementsToHide = [];
+                
+                // ซ่อนทุกอย่างยกเว้น letterContainer
+                Array.from(containerChildren).forEach(child => {
+                    if (child.id !== 'letterContainer') {
+                        elementsToHide.push({element: child, display: child.style.display});
+                        child.style.display = 'none';
+                    }
+                });
+
+                // ใช้ html2canvas แปลงส่วนของจดหมายเป็น Canvas
+                html2canvas(letterContainer, {
+                    allowTaint: true, 
+                    useCORS: true,
+                    scale: 3 // เพิ่ม Scale ให้ภาพคมชัดยิ่งขึ้น
+                }).then(function(canvas) {
+                    // สร้างลิงก์สำหรับดาวน์โหลด
+                    const link = document.createElement('a');
+                    link.download = `Invitation-${nameInput.value || 'Guest'}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+
+                    // คืนค่าการแสดงผล
+                    elementsToHide.forEach(item => {
+                        item.element.style.display = item.display;
+                    });
+
+                }).catch(error => {
+                    console.error('Download failed:', error);
+                    alert('ไม่สามารถดาวน์โหลดภาพได้');
+
+                    // คืนค่าการแสดงผลในกรณีเกิดข้อผิดพลาด
+                    elementsToHide.forEach(item => {
+                        item.element.style.display = item.display;
+                    });
+                });
+            }
+
+            // เรียกใช้งานฟังก์ชันเริ่มต้นทันที
+            updateStyle();
+            updateName();
+        });
+    </script>
 </body>
 </html>
